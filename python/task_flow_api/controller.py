@@ -2,15 +2,12 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-from python.task_flow_api.repository import TaskRepository
 from task_flow_api.service import TaskService
 from task_flow_api.model import Task
 
 task_router = APIRouter()
 
-# Initialize the dependency chain
-task_repository = TaskRepository()
-task_service = TaskService(task_repository)
+task_service = TaskService()
 
 
 @task_router.get("/version")
