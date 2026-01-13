@@ -17,6 +17,8 @@ Créer un custom prompt copilot `/refactor` et le tester le pour refactoriser le
 
 <details>
     <summary>refactor.md</summary>
+
+```markdown
 ---
 description: "Refactor code safely using Martin Fowler code smells, tests-first, and atomic commits (no behavior change)."
 ---
@@ -48,7 +50,7 @@ Refactor the provided codebase section without changing observable behavior. Imp
 - Run #runTests again; ensure green.
 - Commit your work with message describing: smell addressed → refactoring
 </instructions>
-
+```
 
 # Quality checklist
 
