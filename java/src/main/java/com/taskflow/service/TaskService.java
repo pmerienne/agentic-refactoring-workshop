@@ -13,11 +13,13 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskValidationService taskValidationService;
+    private final TaskRulesEngine taskRulesEngine;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskValidationService taskValidationService) {
+    public TaskService(TaskRepository taskRepository, TaskValidationService taskValidationService, TaskRulesEngine taskRulesEngine) {
         this.taskRepository = taskRepository;
         this.taskValidationService = taskValidationService;
+        this.taskRulesEngine = taskRulesEngine;
     }
 
     public List<Task> getAllTasks() {
@@ -43,7 +45,10 @@ public class TaskService {
         if (task.getStatus() == TaskStatus.DONE) {
             task.setCompleted(true);
         }
-        
+
+        String report = this.taskRulesEngine.postProcess(task);
+        System.out.println(report);
+
         return taskRepository.save(task);
     }
 

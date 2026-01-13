@@ -2,6 +2,7 @@ from typing import List
 
 from task_flow_api.repository import TaskRepository
 from task_flow_api.model import Task, TaskStatus
+from task_flow_api.rules import TaskRulesEngine
 from task_flow_api.validation import TaskValidationService
 
 
@@ -9,6 +10,7 @@ class TaskService:
     def __init__(self):
         self.repository = TaskRepository()
         self.validation_service = TaskValidationService()
+        self.rules_engine = TaskRulesEngine()
 
     def create_task(self, task: Task) -> Task:
         assert task.id is None, f"Task already exists with id: {task.id}"
@@ -29,6 +31,7 @@ class TaskService:
         task.status = TaskStatus(status)
         if task.status == TaskStatus.DONE:
             task.completed = True
+        print(self.rules_engine.post_process(task))
         return self.repository.save(task)
 
     def delete_task(self, task_id: int):
