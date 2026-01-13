@@ -40,3 +40,8 @@ This command starts the server with auto-reload enabled, allowing you to see cha
 # Expected response: {"version":"1.0.0"}
 curl 127.0.0.1:8000/version
 ```
+
+To launch test:
+```bash
+uv run pytest
+```
