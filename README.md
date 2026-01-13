@@ -15,7 +15,9 @@ Ce repository est un support de workshop pour apprendre le refactoring agentique
 
 ## 📖 Contexte
 
-Tu es développeur au sein de **TaskFlow**, une startup qui conçoit une plateforme collaborative de gestion de tâches pour équipes projets. L'équipe Backend Core est responsable de l'évolution de l'API interne utilisée aussi bien par le frontend web que par les applications mobiles. L'API actuelle permet de gérer des listes de tâches simples, mais TaskFlow souhaite désormais accélérer très fortement la roadmap. En tant que nouveau développeur, tu rejoins l'équipe pour la renforcer.
+Tu es développeur au sein de **TaskFlow**, une startup qui conçoit une plateforme collaborative de gestion de tâches pour équipes projets. L'équipe Backend Core est responsable de l'évolution de l'API interne utilisée aussi bien par le frontend web que par les applications mobiles. 
+
+Le code actuel de l'API fonctionne, mais il accumule de la dette technique : duplication de code, méthodes trop longues, manque de séparation des responsabilités. Avant d'ajouter de nouvelles fonctionnalités à la roadmap ambitieuse de TaskFlow, l'équipe a décidé de procéder à une **phase de refactoring** pour améliorer la maintenabilité et la qualité du code. En tant que nouveau développeur, tu rejoins l'équipe pour mener ces améliorations avec l'aide de GitHub Copilot.
 
 ### 🔌 API Endpoints
 
