@@ -49,3 +49,35 @@ def test_create_task_with_invalid_data(api_client):
     except (ValueError, AssertionError):
         # Expected - validation failed
         pass
+
+
+def test_update_task_success(api_client):
+    """Test updating a task via API."""
+    # First, create a task
+    task_data = {
+        "title": "Original Task",
+        "description": "This is the original task description with sufficient content",
+        "status": "TODO",
+        "completed": False,
+    }
+    create_response = api_client.post("/tasks", json=task_data)
+    assert create_response.status_code == status.HTTP_200_OK
+    created_task = create_response.json()
+    task_id = created_task["id"]
+
+    # Now, update the task
+    updated_data = {
+        "id": task_id,
+        "title": "Updated Task",
+        "description": "This is the updated task description with sufficient content",
+        "status": "DOING",
+        "completed": False,
+    }
+    update_response = api_client.put(f"/tasks/{task_id}", json=updated_data)
+
+    assert update_response.status_code == status.HTTP_200_OK
+    updated_task = update_response.json()
+    assert updated_task["id"] == task_id
+    assert updated_task["title"] == "Updated Task"
+    assert updated_task["description"] == "This is the updated task description with sufficient content"
+    assert updated_task["status"] == "DOING"

@@ -66,4 +66,48 @@ public class TaskControllerTest {
             assert e.getMessage().contains("Task validation failed");
         }
     }
+
+    @Test
+    public void testUpdateTaskSuccess() throws Exception {
+        // First, create a task
+        String createTaskJson = """
+                {
+                    "title": "Original Task",
+                    "description": "This is the original task description with sufficient content",
+                    "status": "TODO",
+                    "completed": false
+                }
+                """;
+
+        String createResponse = mockMvc.perform(post("/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createTaskJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        // Extract the task ID from the response
+        Long taskId = Long.parseLong(createResponse.split("\"id\":")[1].split(",")[0]);
+
+        // Now, update the task
+        String updateTaskJson = """
+                {
+                    "title": "Updated Task",
+                    "description": "This is the updated task description with sufficient content",
+                    "status": "DOING",
+                    "completed": false
+                }
+                """;
+
+        mockMvc.perform(put("/tasks/" + taskId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateTaskJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(taskId))
+                .andExpect(jsonPath("$.title").value("Updated Task"))
+                .andExpect(jsonPath("$.description").value("This is the updated task description with sufficient content"))
+                .andExpect(jsonPath("$.status").value("DOING"));
+    }
 }

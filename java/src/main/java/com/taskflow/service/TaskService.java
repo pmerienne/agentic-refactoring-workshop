@@ -18,10 +18,7 @@ public class TaskService {
     private TaskValidationService taskValidationService;
 
     @Autowired
-    private TaskRulesEngine taskRulesEngine;
-
-    @Autowired
-    private TaskScoringService taskScoringService;
+    private TaskEmailingPipeline taskEmailingPipeline;
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -46,11 +43,7 @@ public class TaskService {
         if (task.getStatus() == TaskStatus.DONE) {
             task.setCompleted(true);
         }
-
-        String report = this.taskRulesEngine.postProcess(task);
-        System.out.println(report);
-        System.out.println("Score: " + taskScoringService.computeScore(task));
-
+        this.taskEmailingPipeline.sendEmails(task);
         return taskRepository.save(task);
     }
 
