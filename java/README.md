@@ -57,3 +57,9 @@ This command starts the server with auto-reload enabled (via Spring Boot DevTool
 # Expected response: {"version":"1.0.0"}
 curl 127.0.0.1:8080/version
 ```
+
+To run the tests, use:
+
+```bash
+mvn test
+```
