@@ -1,14 +1,14 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from task_flow_api.controller import router as tasks_router
-from task_flow_api.db import init_db
+from task_flow_api.controller import task_router
+from task_flow_api import db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    init_db()
+    db.init_db()
     yield
     # Shutdown (add cleanup code here if needed)
 
@@ -32,7 +32,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-app.include_router(tasks_router)
+app.include_router(task_router)
 
 if __name__ == "__main__":
     import uvicorn
