@@ -11,16 +11,17 @@ import java.util.*;
 @Service
 public class TaskService {
 
-    private final TaskRepository taskRepository;
-    private final TaskValidationService taskValidationService;
-    private final TaskRulesEngine taskRulesEngine;
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskValidationService taskValidationService, TaskRulesEngine taskRulesEngine) {
-        this.taskRepository = taskRepository;
-        this.taskValidationService = taskValidationService;
-        this.taskRulesEngine = taskRulesEngine;
-    }
+    private TaskValidationService taskValidationService;
+
+    @Autowired
+    private TaskRulesEngine taskRulesEngine;
+
+    @Autowired
+    private TaskScoringService taskScoringService;
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -48,6 +49,7 @@ public class TaskService {
 
         String report = this.taskRulesEngine.postProcess(task);
         System.out.println(report);
+        System.out.println("Score: " + taskScoringService.computeScore(task));
 
         return taskRepository.save(task);
     }

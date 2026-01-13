@@ -52,7 +52,6 @@ class TaskRulesEngine:
             self._log_task(task)
         if dev_flag:
             tags.append("dev")
-            task.updated_at = datetime.now()
         return report
 
     def _book_appointment(self, task: Task):

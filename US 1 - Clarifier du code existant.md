@@ -30,7 +30,7 @@ Améliorer la **lisibilité et la maintenabilité du module `TaskValidationServi
 - **Travaille par petites étapes** : chaque amélioration = un commit atomique avec un message clair
 
 ## RESSOURCES
-
+- [GitHub Copilot /test command](https://docs.github.com/en/copilot/using-github-copilot/asking-github-copilot-questions-in-your-ide)
 - [Refactoring with GitHub Copilot](https://docs.github.com/fr/copilot/tutorials/refactor-code)
 - [Best practices for prompting GitHub Copilot](https://docs.github.com/en/copilot/using-github-copilot/prompt-engineering-for-github-copilot)
 

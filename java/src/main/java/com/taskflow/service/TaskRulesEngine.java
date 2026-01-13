@@ -72,7 +72,6 @@ public class TaskRulesEngine {
         }
         if (devFlag) {
             tags.add("dev");
-            task.setUpdatedAt(LocalDateTime.now());
         }
         
         return report.toString();
