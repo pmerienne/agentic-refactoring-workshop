@@ -1,4 +1,4 @@
-# Agentic Coding With Github Copilot
+# Agentic Refactoring With Github Copilot
 
 Ce repository est un support de workshop pour apprendre le refactoring agentique avec github copilot.
 
