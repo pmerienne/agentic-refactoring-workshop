@@ -25,7 +25,7 @@ Sans tests, toute modification du code est dangereuse. L'équipe a besoin de cap
 
 ## HOW
 - Utilise le mode **Agent** de Github copilot
-- Analyse le code de `TaskScoringService` pour comprendre sa logique et identifer les common/edge cases.
+- Utilise le mode **Agent** de Github copilot et analyse le code de `TaskScoringService` pour comprendre sa logique et identifer les common/edge cases : "Analyse #sym:TaskScoringService pour identifier les fonctionnalités basiques et les cas limites"
 - Utilise Copilot avec `/test` pour générer des tests ciblés sans modifier le comportement
 - Vérifie l'exécution des tests avec `#runTests`
 

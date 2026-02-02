@@ -135,6 +135,16 @@ Développer la capacité à sécuriser le comportement d'un code legacy par des 
 - Corriger un bug pendant la phase de couverture des tests
 - Tests peu précis, trop génériques sans cas limites documentés
 
+**Prompt de mise en place de test** :
+```
+/tests tout ces cas avec des tests unitaire pour capturer le comportement actuel : sans modifier le code de TaskScoringService.
+Identifie 5 cas prioritaire et utilise une #todo list pour chaque cas et traite les indépendament avec #runSubagent en suivant les instructions : 
+1. Créer 1 test unitaire sur le cas
+2. Vérifie son fonctionnement avec #runTests 
+3. NE JAMAIS MODIFIER TaskScoringService
+```
+
+
 ## US - 5
 Développer la capacité à créer un workflow AI Copilot personnalisé qui automatise le refactoring sécurisé en appliquant les méthodes de Fowler.
 
