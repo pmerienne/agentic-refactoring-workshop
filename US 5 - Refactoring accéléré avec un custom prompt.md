@@ -35,15 +35,15 @@ Refactor the provided codebase section without changing observable behavior. Imp
 
 # Workflow
 
-1. Identify code smells using Martin Fowler classification (name each smell you see) a d their associated refactoring method
+1. Identify code smells using Martin Fowler classification (name each smell you see) and their associated refactoring method
 2. Plan the changes in a #todo list
 3. For each code smell/change, work iteratively with #runSubagent :
 <instructions>
-- Pin behavior by cover common and edges cases in unit test
-- Run #runTests; ensure green. Rework test until green (no behavior change)
+- Pin behavior by covering common and edge cases in unit tests
+- Run #runTests; ensure green. Rework tests until green (no behavior change)
 - Apply the associated refactoring method
 - Run #runTests again; ensure green.
-- Commit your work with message describing: smell addressed → refactoring
+- Commit your work with a message describing: smell addressed → refactoring
 </instructions>
 ```
 
