@@ -47,3 +47,9 @@ async def delete_task(task_id: int):
     if not success:
         raise HTTPException(status_code=404, detail="Task not found")
     return {"detail": "Task deleted successfully"}
+
+
+@task_router.delete("/tasks/archived/all")
+async def delete_archived_tasks():
+    count = task_service.delete_archived_tasks()
+    return {"detail": f"{count} archived task(s) deleted successfully", "count": count}

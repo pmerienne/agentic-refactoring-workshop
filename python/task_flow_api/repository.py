@@ -1,7 +1,7 @@
 from sqlmodel import select
 
 from task_flow_api.db import create_session
-from task_flow_api.model import Task
+from task_flow_api.model import Task, TaskStatus
 
 
 class TaskRepository:
@@ -33,3 +33,13 @@ class TaskRepository:
             statement = select(Task)
             tasks = db_session.exec(statement).all()
             return list(tasks)
+
+    def delete_archived_tasks(self) -> int:
+        with create_session() as db_session:
+            statement = select(Task).where(Task.status == TaskStatus.ARCHIVED)
+            archived_tasks = db_session.exec(statement).all()
+            count = len(archived_tasks)
+            for task in archived_tasks:
+                db_session.delete(task)
+            db_session.commit()
+            return count

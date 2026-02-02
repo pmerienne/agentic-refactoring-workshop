@@ -39,3 +39,6 @@ class TaskService:
 
     def list_tasks(self) -> List[Task]:
         return self.repository.find_all()
+
+    def delete_archived_tasks(self) -> int:
+        return self.repository.delete_archived_tasks()
