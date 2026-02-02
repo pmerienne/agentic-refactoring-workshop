@@ -48,8 +48,8 @@ class TaskEmailingPipeline:
             recipients.append('manager@example.com')
         return recipients
 
-    def _notify_by_email(self, object: str, body: str, recipients: List[str]):
-        print(f'Sending {object} to {recipients}:\n{body}')
+    def _notify_by_email(self, subject: str, body: str, recipients: List[str]):
+        print(f'Sending {subject} to {recipients}:\n{body}')
 
 
 class EmailDecisionReport:
