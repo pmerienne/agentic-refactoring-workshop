@@ -11,7 +11,7 @@ class TestEmailDecisionReport:
         # Arrange: Create a report with 4 warnings (exceeds threshold of 3)
         report = "prio prio prio prio"  # 4 occurrences of 'prio'
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act & Assert
         assert decision.warnings == 4
         assert decision.requires_urgent_action() is True
@@ -21,7 +21,7 @@ class TestEmailDecisionReport:
         # Arrange: Create a report with critical issue
         report = "This is a critical issue"
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act & Assert
         assert decision.critic is True
         assert decision.requires_urgent_action() is True
@@ -31,7 +31,7 @@ class TestEmailDecisionReport:
         # Arrange: Create a report with exactly 3 warnings
         report = "prio prio prio"  # 3 occurrences of 'prio'
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act & Assert
         assert decision.warnings == 3
         assert decision.requires_urgent_action() is False
@@ -41,7 +41,7 @@ class TestEmailDecisionReport:
         # Arrange: Create a report with 2 warnings and no critical marker
         report = "prio prio"  # 2 occurrences of 'prio'
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act & Assert
         assert decision.warnings == 2
         assert decision.critic is False
@@ -52,7 +52,7 @@ class TestEmailDecisionReport:
         # Arrange: Create a report with many warnings AND critical marker
         report = "prio prio prio prio critical issue"
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act & Assert
         assert decision.warnings == 4
         assert decision.critic is True
@@ -63,7 +63,7 @@ class TestEmailDecisionReport:
         # Arrange: Create a report with 2 'prio' and 2 'bug' mentions
         report = "prio bug prio bug"
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act & Assert
         assert decision.warnings == 4
         assert decision.requires_urgent_action() is True
@@ -77,11 +77,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.8, no warnings, not approved
         report = "Some issue here"
         decision = EmailDecisionReport(report, score=0.8)
-        
+
         # Act: risk_factor = 0.8 * (1 + 0 * 0.1) = 0.8
         # threshold = 0.7, so 0.8 > 0.7 and not approved
         result = decision.notify(score=0.8, threshold=0.7)
-        
+
         # Assert
         assert result is True
 
@@ -90,11 +90,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.65, 1 warning (prio), not approved
         report = "prio issue"
         decision = EmailDecisionReport(report, score=0.65)
-        
+
         # Act: risk_factor = 0.65 * (1 + 1 * 0.1) = 0.65 * 1.1 = 0.715
         # threshold = 0.7, so 0.715 > 0.7 and not approved
         result = decision.notify(score=0.65, threshold=0.7)
-        
+
         # Assert
         assert decision.warnings == 1
         assert result is True
@@ -104,11 +104,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.6, no warnings, not approved
         report = "Some minor issue"
         decision = EmailDecisionReport(report, score=0.6)
-        
+
         # Act: risk_factor = 0.6 * (1 + 0 * 0.1) = 0.6
         # threshold = 0.7, so 0.6 < 0.7
         result = decision.notify(score=0.6, threshold=0.7)
-        
+
         # Assert
         assert result is False
 
@@ -117,11 +117,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.9, no warnings, but approved
         report = "approved for deployment"
         decision = EmailDecisionReport(report, score=0.9)
-        
+
         # Act: risk_factor = 0.9 * (1 + 0 * 0.1) = 0.9
         # threshold = 0.7, so 0.9 > 0.7 BUT approved
         result = decision.notify(score=0.9, threshold=0.7)
-        
+
         # Assert
         assert decision.approved is True
         assert result is False
@@ -131,11 +131,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.5, 2 warnings (prio + bug)
         report = "prio bug issue"
         decision = EmailDecisionReport(report, score=0.5)
-        
+
         # Act: risk_factor = 0.5 * (1 + 2 * 0.1) = 0.5 * 1.2 = 0.6
         # threshold = 0.7, so 0.6 < 0.7
         result = decision.notify(score=0.5, threshold=0.7)
-        
+
         # Assert
         assert decision.warnings == 2
         assert result is False
@@ -145,11 +145,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.6, 4 warnings
         report = "prio prio bug bug"
         decision = EmailDecisionReport(report, score=0.6)
-        
+
         # Act: risk_factor = 0.6 * (1 + 4 * 0.1) = 0.6 * 1.4 = 0.84
         # threshold = 0.7, so 0.84 > 0.7 and not approved
         result = decision.notify(score=0.6, threshold=0.7)
-        
+
         # Assert
         assert decision.warnings == 4
         assert result is True
@@ -159,11 +159,11 @@ class TestEmailDecisionNotify:
         # Arrange: score=0.7, no warnings
         report = "Some issue"
         decision = EmailDecisionReport(report, score=0.7)
-        
+
         # Act: risk_factor = 0.7 * (1 + 0 * 0.1) = 0.7
         # threshold = 0.7, so 0.7 == 0.7 (not greater)
         result = decision.notify(score=0.7, threshold=0.7)
-        
+
         # Assert
         assert result is False
 
@@ -177,7 +177,7 @@ class TestMagicNumberBehavior:
         report = "some issue"
         decision = EmailDecisionReport(report, score=0.7)
         assert decision.notify(score=0.7, threshold=0.7) is False
-        
+
         # Test just above: score = 0.71, risk_factor = 0.71 (above threshold, should notify)
         decision2 = EmailDecisionReport(report, score=0.71)
         assert decision2.notify(score=0.71, threshold=0.7) is True
@@ -189,13 +189,13 @@ class TestMagicNumberBehavior:
         decision = EmailDecisionReport(report, score=0.5)
         assert decision.warnings == 0
         assert decision.notify(score=0.5, threshold=0.7) is False
-        
+
         # With 3 warnings: risk_factor = 0.5 * (1 + 3*0.1) = 0.5 * 1.3 = 0.65 (still below 0.7)
         report2 = "prio prio prio"
         decision2 = EmailDecisionReport(report2, score=0.5)
         assert decision2.warnings == 3
         assert decision2.notify(score=0.5, threshold=0.7) is False
-        
+
         # With 5 warnings: risk_factor = 0.5 * (1 + 5*0.1) = 0.5 * 1.5 = 0.75 (above 0.7)
         report3 = "prio prio prio bug bug"
         decision3 = EmailDecisionReport(report3, score=0.5)
@@ -209,7 +209,7 @@ class TestMagicNumberBehavior:
         decision = EmailDecisionReport(report, score=0.5)
         assert decision.warnings == 3
         assert decision.requires_urgent_action() is False
-        
+
         # Above threshold: warnings = 4 should trigger urgent
         report2 = "prio prio prio prio"
         decision2 = EmailDecisionReport(report2, score=0.5)
@@ -224,33 +224,38 @@ class TestTaskEmailingPipeline:
         """Should return only team email for normal notifications"""
         # Arrange
         pipeline = TaskEmailingPipeline()
-        
+
         # Act
         recipients = pipeline._build_recipients(requires_urgent_action=False)
-        
+
         # Assert
-        assert recipients == ['team@example.com']
+        assert recipients == ["team@example.com"]
 
     def test_build_recipients_urgent_notification(self):
         """Should return team and manager emails for urgent notifications"""
         # Arrange
         pipeline = TaskEmailingPipeline()
-        
+
         # Act
         recipients = pipeline._build_recipients(requires_urgent_action=True)
-        
+
         # Assert
-        assert recipients == ['team@example.com', 'manager@example.com']
+        assert recipients == ["team@example.com", "manager@example.com"]
 
     def test_format_email_subject_with_urgent_label(self):
         """Should format subject with URGENT label when urgent action required"""
         # Arrange
         pipeline = TaskEmailingPipeline()
-        task = Task(id=1, title="Fix critical bug", description="Bug in production", status="TODO")
-        
+        task = Task(
+            id=1,
+            title="Fix critical bug",
+            description="Bug in production",
+            status="TODO",
+        )
+
         # Act
         subject = pipeline._build_email_subject(task, requires_urgent_action=True)
-        
+
         # Assert
         assert subject == "[URGENT] Task Notification: Fix critical bug"
 
@@ -258,11 +263,16 @@ class TestTaskEmailingPipeline:
         """Should format subject with ATTENTION REQUIRED label for normal notifications"""
         # Arrange
         pipeline = TaskEmailingPipeline()
-        task = Task(id=2, title="Update documentation", description="Docs need updating", status="TODO")
-        
+        task = Task(
+            id=2,
+            title="Update documentation",
+            description="Docs need updating",
+            status="TODO",
+        )
+
         # Act
         subject = pipeline._build_email_subject(task, requires_urgent_action=False)
-        
+
         # Assert
         assert subject == "[ATTENTION REQUIRED] Task Notification: Update documentation"
 
@@ -270,12 +280,21 @@ class TestTaskEmailingPipeline:
         """Should include task title in the subject line"""
         # Arrange
         pipeline = TaskEmailingPipeline()
-        task = Task(id=3, title="Review pull request", description="PR needs review", status="TODO")
-        
+        task = Task(
+            id=3,
+            title="Review pull request",
+            description="PR needs review",
+            status="TODO",
+        )
+
         # Act
-        urgent_subject = pipeline._build_email_subject(task, requires_urgent_action=True)
-        normal_subject = pipeline._build_email_subject(task, requires_urgent_action=False)
-        
+        urgent_subject = pipeline._build_email_subject(
+            task, requires_urgent_action=True
+        )
+        normal_subject = pipeline._build_email_subject(
+            task, requires_urgent_action=False
+        )
+
         # Assert
         assert "Review pull request" in urgent_subject
         assert "Review pull request" in normal_subject
@@ -286,11 +305,11 @@ class TestTaskEmailingPipeline:
         pipeline = TaskEmailingPipeline()
         subject = "Test Subject"
         body = "Test email body"
-        recipients = ['team@example.com', 'manager@example.com']
-        
+        recipients = ["team@example.com", "manager@example.com"]
+
         # Act
         pipeline._notify_by_email(subject, body, recipients)
-        
+
         # Assert
         captured = capsys.readouterr()
         assert "Test Subject" in captured.out
