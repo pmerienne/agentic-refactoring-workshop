@@ -27,7 +27,7 @@ Le formateur :
 - introduit le contexte et le déroulé global du TP
 - reste disponible pour débloquer les apprenants,
 - assure le **cadencement** de la session.
-- le contexte narratif est là pour rapprocher du réel et sa compréhensio ne doit en aucun cas ralentir les apprenants
+- le contexte narratif est là pour rapprocher du réel et sa compréhension ne doit en aucun cas ralentir les apprenants
 
 ## Cadence par exercice
 
