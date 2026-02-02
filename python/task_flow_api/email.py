@@ -12,6 +12,10 @@ class TaskEmailingPipeline:
     WARNING_RISK_MULTIPLIER = 0.1  # Risk factor increase per warning
     URGENT_WARNING_THRESHOLD = 3  # Warnings count threshold for urgent action
     
+    # Urgency labels for email subjects
+    LABEL_URGENT = "URGENT"
+    LABEL_ATTENTION_REQUIRED = "ATTENTION REQUIRED"
+    
     def __init__(self) -> None:
         self.rules_engine = TaskRulesEngine()
         self.scoring_service = TaskScoringService()
@@ -36,7 +40,7 @@ class TaskEmailingPipeline:
 
     def _build_email_subject(self, task: Task, requires_urgent_action: bool) -> str:
         """Format email subject with urgency label and task title."""
-        urgency_label = "URGENT" if requires_urgent_action else "ATTENTION REQUIRED"
+        urgency_label = self.LABEL_URGENT if requires_urgent_action else self.LABEL_ATTENTION_REQUIRED
         return f"[{urgency_label}] Task Notification: {task.title}"
 
     def _build_recipients(self, requires_urgent_action: bool) -> List[str]:
