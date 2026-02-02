@@ -24,14 +24,13 @@ Sans tests, toute modification du code est dangereuse. L'équipe a besoin de cap
 - Atteindre une couverture de code satisfaisante pour le module
 
 ## HOW
-- Analyse le code de `TaskScoringService` pour comprendre sa logique
-- Utilise Copilot avec `/test` pour générer des tests ciblés
+- Utilise le mode **Agent** de Github copilot
+- Analyse le code de `TaskScoringService` pour comprendre sa logique et identifer les common/edge cases.
+- Utilise Copilot avec `/test` pour générer des tests ciblés sans modifier le comportement
 - Vérifie l'exécution des tests avec `#runTests`
 
 
 ## VALIDATION CRITERIA
 - Les tests couvrent les cas principaux du `TaskScoringService`
 - Les edge cases sont identifiés et testés (nulls, valeurs limites, etc.)
-- Les noms de tests sont explicites et suivent le pattern AAA (Arrange-Act-Assert)
 - Tous les tests passent **sans modifier le code métier**
-- La couverture de code du module est significative (>95%)

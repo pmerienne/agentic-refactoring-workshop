@@ -59,7 +59,7 @@ Créer et appliquer des **instructions Copilot personnalisées** pour TaskFlow :
 
 ## HOW
 - Intègre les conventions d'équipes dans un fichier `.github/copilot-instructions.md`
-- **Teste les instructions** sur un cas concret ajouter un endpoint pour supprimer les tâches `ARCHIVED`
+- **Teste les instructions** sur un cas concret : ajouter un endpoint pour supprimer les tâches `ARCHIVED`
 - Affine les instructions si nécessaire selon les résultats
 
 ## RESSOURCES

@@ -8,7 +8,7 @@ Créer un custom prompt copilot `/refactor` et le tester le pour refactoriser le
 
 ### HOW
 
-- Crée un **custom prompt Copilot Agent** dédié au refactoring : `.github/prompts/refactor.md` avec les instructions permettant de 
+- Crée un **custom prompt** dédié au refactoring : `.github/prompts/refactor.md` avec les instructions permettant de 
     1. Figer le comportement en vérifiant la couverture de tests et les implémenter si nécessaire
     2. Planifier les changements en identifiant des code smells
     3. Appliquer un refactoring par commit
