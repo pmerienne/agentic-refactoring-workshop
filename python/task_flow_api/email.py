@@ -3,23 +3,22 @@ from task_flow_api.model import Task
 from task_flow_api.rules import TaskRulesEngine
 from task_flow_api.scoring import TaskScoringService
 
+URGENT_WARNING_THRESHOLD = 3
+
 
 class TaskEmailingPipeline:
-    NOTIFICATION_THRESHOLD = 0.7
-    URGENT_WARNING_THRESHOLD = 3
-
     def __init__(self) -> None:
         self.rules_engine = TaskRulesEngine()
         self.scoring_service = TaskScoringService()
 
     def send_emails(self, task: Task):
-        threshold = self.NOTIFICATION_THRESHOLD
+        threshold = 0.7
         report = self.rules_engine.post_process(task)
         score = self.scoring_service.compute_score(task)
         decision = EmailDecisionReport(report, score)
 
         should_notify = decision.notify(score, threshold)
-        requires_urgent_action = decision.warnings > self.URGENT_WARNING_THRESHOLD or decision.critic
+        requires_urgent_action = decision.requires_urgent_action()
 
         if should_notify or requires_urgent_action:
             urgency_label = "URGENT" if requires_urgent_action else "ATTENTION REQUIRED"
@@ -48,3 +47,7 @@ class EmailDecisionReport:
     def notify(self, score, threshold) -> bool:
         risk_factor = score * (1 + self.warnings * 0.1)
         return risk_factor > threshold and not self.approved
+
+    def requires_urgent_action(self) -> bool:
+        """Determine if the decision requires urgent action based on warnings and criticality."""
+        return self.warnings > URGENT_WARNING_THRESHOLD or self.critic
