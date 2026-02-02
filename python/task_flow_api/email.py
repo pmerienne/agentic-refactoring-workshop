@@ -7,12 +7,19 @@ URGENT_WARNING_THRESHOLD = 3
 
 
 class TaskEmailingPipeline:
+    """Pipeline for sending task notification emails based on scoring and rules."""
+    
+    # Notification thresholds and multipliers
+    NOTIFICATION_THRESHOLD = 0.7  # Score threshold for triggering notifications
+    WARNING_RISK_MULTIPLIER = 0.1  # Risk factor increase per warning
+    URGENT_WARNING_THRESHOLD = 3  # Warnings count threshold for urgent action
+    
     def __init__(self) -> None:
         self.rules_engine = TaskRulesEngine()
         self.scoring_service = TaskScoringService()
 
     def send_emails(self, task: Task):
-        threshold = 0.7
+        threshold = self.NOTIFICATION_THRESHOLD
         report = self.rules_engine.post_process(task)
         score = self.scoring_service.compute_score(task)
         decision = EmailDecisionReport(report, score)
@@ -23,10 +30,7 @@ class TaskEmailingPipeline:
         if should_notify or requires_urgent_action:
             urgency_label = "URGENT" if requires_urgent_action else "ATTENTION REQUIRED"
             email_body = report
-            recipients = ['team@example.com']
-
-            if requires_urgent_action:
-                recipients.append('manager@example.com')
+            recipients = self._build_recipients(requires_urgent_action)
 
             self._notify_by_email(
                 f"[{urgency_label}] Task Notification: {task.title}",
@@ -34,20 +38,33 @@ class TaskEmailingPipeline:
                 recipients
             )
 
+    def _build_recipients(self, requires_urgent_action: bool) -> List[str]:
+        """Build email recipient list based on urgency."""
+        recipients = ['team@example.com']
+        if requires_urgent_action:
+            recipients.append('manager@example.com')
+        return recipients
+
     def _notify_by_email(self, object: str, body: str, recipients: List[str]):
         print(f'Sending {object} to {recipients}:\n{body}')
 
 
 class EmailDecisionReport:
+    """Analyzes reports and scores to make email notification decisions."""
+    
+    # Risk calculation constants
+    WARNING_RISK_MULTIPLIER = 0.1  # Risk factor increase per warning
+    URGENT_WARNING_THRESHOLD = 3  # Warnings count threshold for urgent action
+    
     def __init__(self, report, score) -> None:
         self.warnings = report.count('prio') + report.count('bug')
         self.critic = 'critical' in report.lower()
         self.approved = 'approved' in report.lower()
 
     def notify(self, score, threshold) -> bool:
-        risk_factor = score * (1 + self.warnings * 0.1)
+        risk_factor = score * (1 + self.warnings * self.WARNING_RISK_MULTIPLIER)
         return risk_factor > threshold and not self.approved
 
     def requires_urgent_action(self) -> bool:
         """Determine if the decision requires urgent action based on warnings and criticality."""
-        return self.warnings > URGENT_WARNING_THRESHOLD or self.critic
+        return self.warnings > self.URGENT_WARNING_THRESHOLD or self.critic

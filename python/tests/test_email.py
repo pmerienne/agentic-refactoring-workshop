@@ -67,3 +67,177 @@ class TestEmailDecisionReport:
         # Act & Assert
         assert decision.warnings == 4
         assert decision.requires_urgent_action() is True
+
+
+class TestEmailDecisionNotify:
+    """Tests for notification decision logic with threshold and risk calculation"""
+
+    def test_notify_when_score_exceeds_threshold_no_warnings(self):
+        """Should notify when score (0.8) > threshold (0.7) with no warnings"""
+        # Arrange: score=0.8, no warnings, not approved
+        report = "Some issue here"
+        decision = EmailDecisionReport(report, score=0.8)
+        
+        # Act: risk_factor = 0.8 * (1 + 0 * 0.1) = 0.8
+        # threshold = 0.7, so 0.8 > 0.7 and not approved
+        result = decision.notify(score=0.8, threshold=0.7)
+        
+        # Assert
+        assert result is True
+
+    def test_notify_when_score_below_threshold_but_warnings_push_over(self):
+        """Should notify when warnings increase risk_factor above threshold"""
+        # Arrange: score=0.65, 1 warning (prio), not approved
+        report = "prio issue"
+        decision = EmailDecisionReport(report, score=0.65)
+        
+        # Act: risk_factor = 0.65 * (1 + 1 * 0.1) = 0.65 * 1.1 = 0.715
+        # threshold = 0.7, so 0.715 > 0.7 and not approved
+        result = decision.notify(score=0.65, threshold=0.7)
+        
+        # Assert
+        assert decision.warnings == 1
+        assert result is True
+
+    def test_no_notify_when_score_below_threshold(self):
+        """Should not notify when score < threshold with no warnings"""
+        # Arrange: score=0.6, no warnings, not approved
+        report = "Some minor issue"
+        decision = EmailDecisionReport(report, score=0.6)
+        
+        # Act: risk_factor = 0.6 * (1 + 0 * 0.1) = 0.6
+        # threshold = 0.7, so 0.6 < 0.7
+        result = decision.notify(score=0.6, threshold=0.7)
+        
+        # Assert
+        assert result is False
+
+    def test_no_notify_when_approved(self):
+        """Should not notify when task is approved regardless of score"""
+        # Arrange: score=0.9, no warnings, but approved
+        report = "approved for deployment"
+        decision = EmailDecisionReport(report, score=0.9)
+        
+        # Act: risk_factor = 0.9 * (1 + 0 * 0.1) = 0.9
+        # threshold = 0.7, so 0.9 > 0.7 BUT approved
+        result = decision.notify(score=0.9, threshold=0.7)
+        
+        # Assert
+        assert decision.approved is True
+        assert result is False
+
+    def test_risk_factor_multiplier_calculation(self):
+        """Should apply 0.1 multiplier per warning to risk calculation"""
+        # Arrange: score=0.5, 2 warnings (prio + bug)
+        report = "prio bug issue"
+        decision = EmailDecisionReport(report, score=0.5)
+        
+        # Act: risk_factor = 0.5 * (1 + 2 * 0.1) = 0.5 * 1.2 = 0.6
+        # threshold = 0.7, so 0.6 < 0.7
+        result = decision.notify(score=0.5, threshold=0.7)
+        
+        # Assert
+        assert decision.warnings == 2
+        assert result is False
+
+    def test_risk_factor_with_many_warnings(self):
+        """Should correctly apply multiplier with multiple warnings"""
+        # Arrange: score=0.6, 4 warnings
+        report = "prio prio bug bug"
+        decision = EmailDecisionReport(report, score=0.6)
+        
+        # Act: risk_factor = 0.6 * (1 + 4 * 0.1) = 0.6 * 1.4 = 0.84
+        # threshold = 0.7, so 0.84 > 0.7 and not approved
+        result = decision.notify(score=0.6, threshold=0.7)
+        
+        # Assert
+        assert decision.warnings == 4
+        assert result is True
+
+    def test_threshold_boundary_just_below(self):
+        """Should not notify when risk_factor equals threshold (edge case)"""
+        # Arrange: score=0.7, no warnings
+        report = "Some issue"
+        decision = EmailDecisionReport(report, score=0.7)
+        
+        # Act: risk_factor = 0.7 * (1 + 0 * 0.1) = 0.7
+        # threshold = 0.7, so 0.7 == 0.7 (not greater)
+        result = decision.notify(score=0.7, threshold=0.7)
+        
+        # Assert
+        assert result is False
+
+
+class TestMagicNumberBehavior:
+    """Integration tests to lock down magic number behavior before refactoring"""
+
+    def test_threshold_value_0_7_in_notify_method(self):
+        """Verify that 0.7 threshold is used in notify calculation"""
+        # Test exact boundary: score = 0.7, risk_factor = 0.7 (equals threshold, should NOT notify)
+        report = "some issue"
+        decision = EmailDecisionReport(report, score=0.7)
+        assert decision.notify(score=0.7, threshold=0.7) is False
+        
+        # Test just above: score = 0.71, risk_factor = 0.71 (above threshold, should notify)
+        decision2 = EmailDecisionReport(report, score=0.71)
+        assert decision2.notify(score=0.71, threshold=0.7) is True
+
+    def test_multiplier_value_0_1_per_warning(self):
+        """Verify that 0.1 multiplier per warning is applied correctly"""
+        # Base: score=0.5, warnings=0, risk_factor = 0.5 * (1 + 0*0.1) = 0.5
+        report = "issue"
+        decision = EmailDecisionReport(report, score=0.5)
+        assert decision.warnings == 0
+        assert decision.notify(score=0.5, threshold=0.7) is False
+        
+        # With 3 warnings: risk_factor = 0.5 * (1 + 3*0.1) = 0.5 * 1.3 = 0.65 (still below 0.7)
+        report2 = "prio prio prio"
+        decision2 = EmailDecisionReport(report2, score=0.5)
+        assert decision2.warnings == 3
+        assert decision2.notify(score=0.5, threshold=0.7) is False
+        
+        # With 5 warnings: risk_factor = 0.5 * (1 + 5*0.1) = 0.5 * 1.5 = 0.75 (above 0.7)
+        report3 = "prio prio prio bug bug"
+        decision3 = EmailDecisionReport(report3, score=0.5)
+        assert decision3.warnings == 5
+        assert decision3.notify(score=0.5, threshold=0.7) is True
+
+    def test_urgent_threshold_value_3_warnings(self):
+        """Verify that warnings > 3 triggers urgent action"""
+        # At threshold: warnings = 3 should NOT trigger urgent
+        report = "prio prio prio"
+        decision = EmailDecisionReport(report, score=0.5)
+        assert decision.warnings == 3
+        assert decision.requires_urgent_action() is False
+        
+        # Above threshold: warnings = 4 should trigger urgent
+        report2 = "prio prio prio prio"
+        decision2 = EmailDecisionReport(report2, score=0.5)
+        assert decision2.warnings == 4
+        assert decision2.requires_urgent_action() is True
+
+
+class TestTaskEmailingPipeline:
+    """Tests for recipient building logic in TaskEmailingPipeline"""
+
+    def test_build_recipients_normal_notification(self):
+        """Should return only team email for normal notifications"""
+        # Arrange
+        pipeline = TaskEmailingPipeline()
+        
+        # Act
+        recipients = pipeline._build_recipients(requires_urgent_action=False)
+        
+        # Assert
+        assert recipients == ['team@example.com']
+
+    def test_build_recipients_urgent_notification(self):
+        """Should return team and manager emails for urgent notifications"""
+        # Arrange
+        pipeline = TaskEmailingPipeline()
+        
+        # Act
+        recipients = pipeline._build_recipients(requires_urgent_action=True)
+        
+        # Assert
+        assert recipients == ['team@example.com', 'manager@example.com']
