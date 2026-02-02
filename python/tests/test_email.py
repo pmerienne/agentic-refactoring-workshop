@@ -249,7 +249,7 @@ class TestTaskEmailingPipeline:
         task = Task(id=1, title="Fix critical bug", description="Bug in production", status="TODO")
         
         # Act
-        subject = pipeline._format_email_subject(task, requires_urgent_action=True)
+        subject = pipeline._build_email_subject(task, requires_urgent_action=True)
         
         # Assert
         assert subject == "[URGENT] Task Notification: Fix critical bug"
@@ -261,7 +261,7 @@ class TestTaskEmailingPipeline:
         task = Task(id=2, title="Update documentation", description="Docs need updating", status="TODO")
         
         # Act
-        subject = pipeline._format_email_subject(task, requires_urgent_action=False)
+        subject = pipeline._build_email_subject(task, requires_urgent_action=False)
         
         # Assert
         assert subject == "[ATTENTION REQUIRED] Task Notification: Update documentation"
@@ -273,8 +273,8 @@ class TestTaskEmailingPipeline:
         task = Task(id=3, title="Review pull request", description="PR needs review", status="TODO")
         
         # Act
-        urgent_subject = pipeline._format_email_subject(task, requires_urgent_action=True)
-        normal_subject = pipeline._format_email_subject(task, requires_urgent_action=False)
+        urgent_subject = pipeline._build_email_subject(task, requires_urgent_action=True)
+        normal_subject = pipeline._build_email_subject(task, requires_urgent_action=False)
         
         # Assert
         assert "Review pull request" in urgent_subject
