@@ -3,8 +3,6 @@ from task_flow_api.model import Task
 from task_flow_api.rules import TaskRulesEngine
 from task_flow_api.scoring import TaskScoringService
 
-URGENT_WARNING_THRESHOLD = 3
-
 
 class TaskEmailingPipeline:
     """Pipeline for sending task notification emails based on scoring and rules."""

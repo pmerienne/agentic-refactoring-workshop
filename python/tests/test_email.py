@@ -241,3 +241,41 @@ class TestTaskEmailingPipeline:
         
         # Assert
         assert recipients == ['team@example.com', 'manager@example.com']
+
+    def test_format_email_subject_with_urgent_label(self):
+        """Should format subject with URGENT label when urgent action required"""
+        # Arrange
+        pipeline = TaskEmailingPipeline()
+        task = Task(id=1, title="Fix critical bug", description="Bug in production", status="TODO")
+        
+        # Act
+        subject = pipeline._format_email_subject(task, requires_urgent_action=True)
+        
+        # Assert
+        assert subject == "[URGENT] Task Notification: Fix critical bug"
+
+    def test_format_email_subject_with_attention_required_label(self):
+        """Should format subject with ATTENTION REQUIRED label for normal notifications"""
+        # Arrange
+        pipeline = TaskEmailingPipeline()
+        task = Task(id=2, title="Update documentation", description="Docs need updating", status="TODO")
+        
+        # Act
+        subject = pipeline._format_email_subject(task, requires_urgent_action=False)
+        
+        # Assert
+        assert subject == "[ATTENTION REQUIRED] Task Notification: Update documentation"
+
+    def test_format_email_subject_includes_task_title(self):
+        """Should include task title in the subject line"""
+        # Arrange
+        pipeline = TaskEmailingPipeline()
+        task = Task(id=3, title="Review pull request", description="PR needs review", status="TODO")
+        
+        # Act
+        urgent_subject = pipeline._format_email_subject(task, requires_urgent_action=True)
+        normal_subject = pipeline._format_email_subject(task, requires_urgent_action=False)
+        
+        # Assert
+        assert "Review pull request" in urgent_subject
+        assert "Review pull request" in normal_subject
