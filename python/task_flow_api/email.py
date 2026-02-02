@@ -22,17 +22,15 @@ class TaskEmailingPipeline:
         score = self.scoring_service.compute_score(task)
         decision = EmailDecisionReport(report, score)
 
-        should_notify = decision.notify(score, threshold)
         requires_urgent_action = decision.requires_urgent_action()
 
-        if should_notify or requires_urgent_action:
+        if decision.notify(score, threshold) or requires_urgent_action:
             subject = self._format_email_subject(task, requires_urgent_action)
-            email_body = report
             recipients = self._build_recipients(requires_urgent_action)
 
             self._notify_by_email(
                 subject,
-                email_body,
+                report,
                 recipients
             )
 
