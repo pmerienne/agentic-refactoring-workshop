@@ -26,9 +26,10 @@ Produire un **diagnostic technique complet** du module `TaskRulesEngine` :
 
 - Ouvre le fichier `TaskRulesEngine` et familiarise-toi avec sa structure
 - Utilise Copilot en **Ask Mode** pour comprendre cette classe :"Explique-moi ce module comme si j'étais nouveau dans l'équipe. "
-- Utilise maintenant `/explain` sur les fonctions clés pour comprendre leur logique interne
+- Utilise maintenant `/explain` sur les fonctions clés pour comprendre leur logique interne : "/explain descriptions rules"
 - Passe en mode **Plan** et demande à Copilot : "Identifie les code smells dans ce code, classe-les selon Martin Fowler, explique l'impact sur la maintenabilité et propose une piste d'amélioration"
-- Compile les résultats dans un document de synthèse pour l'équipe
+- Compile les résultats dans un document de synthèse actionnable pour l'équipe en cliquant sur le bouton "Open In Editor"
+- Si le plan te semble bon, ouvre une nouvelle session et lance le refactoring avec la "slash command" nouvellement créée
 
 ## RESSOURCES
 

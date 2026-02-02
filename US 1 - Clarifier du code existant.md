@@ -26,8 +26,7 @@ Améliorer la **lisibilité et la maintenabilité du module `TaskValidationServi
 - Utilise Copilot pour t'assister dans le refactoring :
     - **Renommage intelligent** : sélectionne une variable/méthode et utilise `F2` pour que Copilot te suggére un meilleur nom
     - **Simplification de conditions** : sélectionne du code complexe et demande via l'inline chat (`Ctrl` + `I` ou `Cmd` + `I`) : "Simplifie cette logique en gardant le même comportement"
-    - **Extraction de méthodes** : identifie les blocs dupliqués et demande "Extrait cette logique dans une méthode réutilisable"
-- **Travaille par petites étapes** : chaque amélioration = un commit atomique avec un message clair
+    - **Extraction de méthodes** : identifie les blocs de dupliqués et demande "Extrait la logique dupliquée dans une méthode réutilisable"
 
 ## RESSOURCES
 - [GitHub Copilot /test command](https://docs.github.com/en/copilot/using-github-copilot/asking-github-copilot-questions-in-your-ide)
