@@ -6,20 +6,29 @@ The `task_flow_api` project is organized into a three-layer architecture consist
 ```
 src/main/java/com/taskflow/
 ├── controller/
-│   └── TaskController.java    # API layer with routes for handling HTTP requests
+│   ├── TaskController.java       # API layer with routes for handling HTTP requests
+│   └── VersionController.java    # Version endpoint controller
 ├── service/
-│   └── TaskService.java        # Business logic layer interacting with repository
+│   ├── TaskService.java              # Business logic layer interacting with repository
+│   ├── TaskEmailingPipeline.java     # Email notification pipeline
+│   ├── TaskRulesEngine.java          # Business rules engine
+│   ├── TaskScoringService.java       # Task scoring logic
+│   └── TaskValidationService.java    # Task validation logic
 ├── repository/
-│   └── TaskRepository.java     # Database interactions and CRUD operations
+│   └── TaskRepository.java       # Database interactions and CRUD operations
 ├── model/
-│   └── Task.java               # Data models used in the application
-└── TaskFlowApplication.java    # Spring Boot application entry point
+│   ├── Task.java                 # Task data model
+│   └── TaskStatus.java           # Task status enumeration
+└── TaskFlowApplication.java      # Spring Boot application entry point
 
 src/main/resources/
-├── application.properties      # Application configuration
-└── application.yml             # Alternative YAML configuration
+├── application.properties        # Application configuration
 
-pom.xml                         # Maven dependencies and project configuration
+src/test/java/com/taskflow/
+└── controller/
+    └── TaskControllerTest.java   # Unit tests for TaskController
+
+pom.xml                           # Maven dependencies and project configuration
 ```
 
 
