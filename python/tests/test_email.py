@@ -279,3 +279,21 @@ class TestTaskEmailingPipeline:
         # Assert
         assert "Review pull request" in urgent_subject
         assert "Review pull request" in normal_subject
+
+    def test_notify_by_email_prints_email_details(self, capsys):
+        """Should print email subject, recipients, and body"""
+        # Arrange
+        pipeline = TaskEmailingPipeline()
+        subject = "Test Subject"
+        body = "Test email body"
+        recipients = ['team@example.com', 'manager@example.com']
+        
+        # Act
+        pipeline._notify_by_email(subject, body, recipients)
+        
+        # Assert
+        captured = capsys.readouterr()
+        assert "Test Subject" in captured.out
+        assert "team@example.com" in captured.out
+        assert "manager@example.com" in captured.out
+        assert "Test email body" in captured.out

@@ -26,15 +26,20 @@ class TaskEmailingPipeline:
         requires_urgent_action = decision.requires_urgent_action()
 
         if should_notify or requires_urgent_action:
-            urgency_label = "URGENT" if requires_urgent_action else "ATTENTION REQUIRED"
+            subject = self._format_email_subject(task, requires_urgent_action)
             email_body = report
             recipients = self._build_recipients(requires_urgent_action)
 
             self._notify_by_email(
-                f"[{urgency_label}] Task Notification: {task.title}",
+                subject,
                 email_body,
                 recipients
             )
+
+    def _format_email_subject(self, task: Task, requires_urgent_action: bool) -> str:
+        """Format email subject with urgency label and task title."""
+        urgency_label = "URGENT" if requires_urgent_action else "ATTENTION REQUIRED"
+        return f"[{urgency_label}] Task Notification: {task.title}"
 
     def _build_recipients(self, requires_urgent_action: bool) -> List[str]:
         """Build email recipient list based on urgency."""
