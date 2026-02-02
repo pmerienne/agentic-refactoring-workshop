@@ -8,7 +8,7 @@ Créer un custom prompt copilot `/refactor` et le tester le pour refactoriser le
 
 ### HOW
 
-- Crée un **custom prompt Copilot Agent** dédié au refactoring : `.github/prompts/refactor.md` avec les instructions permettant de 
+- Crée un **custom prompt** dédié au refactoring : `.github/prompts/refactor.md` avec les instructions permettant de 
     1. Figer le comportement en vérifiant la couverture de tests et les implémenter si nécessaire
     2. Planifier les changements en identifiant des code smells
     3. Appliquer un refactoring par commit
@@ -35,15 +35,15 @@ Refactor the provided codebase section without changing observable behavior. Imp
 
 # Workflow
 
-1. Identify code smells using Martin Fowler classification (name each smell you see) a d their associated refactoring method
+1. Identify code smells using Martin Fowler classification (name each smell you see) and their associated refactoring method
 2. Plan the changes in a #todo list
 3. For each code smell/change, work iteratively with #runSubagent :
 <instructions>
-- Pin behavior by cover common and edges cases in unit test
-- Run #runTests; ensure green. Rework test until green (no behavior change)
+- Pin behavior by covering common and edge cases in unit tests
+- Run #runTests; ensure green. Rework tests until green (no behavior change)
 - Apply the associated refactoring method
 - Run #runTests again; ensure green.
-- Commit your work with message describing: smell addressed → refactoring
+- Commit your work with a message describing: smell addressed → refactoring
 </instructions>
 ```
 
